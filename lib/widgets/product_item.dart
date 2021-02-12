@@ -15,7 +15,6 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(
       context,
-      listen: false,
     );
     final cart = Provider.of<Cart>(
       context,
@@ -33,7 +32,11 @@ class ProductItem extends StatelessWidget {
           },
           child: Image.network(
             product.imageUrl,
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
+            errorBuilder: (BuildContext context, Object exception,
+                StackTrace stackTrace) {
+              return Center(child: Text('Loading...'));
+            },
           ),
         ),
         footer: GridTileBar(
@@ -58,6 +61,24 @@ class ProductItem extends StatelessWidget {
             icon: Icon(Icons.shopping_cart_rounded),
             onPressed: () {
               cart.addItem(product.id, product.price, product.title);
+              Scaffold.of(context).hideCurrentSnackBar();
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Added to cart!'),
+                      Text('${cart.productQuantity(product.id)} x')
+                    ],
+                  ),
+                  action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {
+                      cart.undoAddingItem(product.id);
+                    },
+                  ),
+                ),
+              );
             },
             color: Theme.of(context).accentColor,
           ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/product_gird_view.dart';
 import '../widgets/badge.dart';
+import './cart_screen.dart';
+import 'drawer_screen.dart';
 
 enum Filtering { favourites, all }
 
@@ -24,7 +26,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               builder: (_, cart, child) => Badge(
                   child: IconButton(
                     icon: child,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(CartScreen.routeName);
+                    },
                   ),
                   value: cart.itemCount.toString()),
               child: Icon(Icons.shopping_cart_rounded),
@@ -47,6 +51,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                     ])
           ],
         ),
+        drawer: const Drawer(child: const DrawerScreen(),),
         body: ProductsGridView(_showFav));
   }
 }

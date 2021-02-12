@@ -26,7 +26,7 @@ class Products with ChangeNotifier {
       description: 'Warm and cozy - exactly what you need for the winter.',
       price: 19.99,
       imageUrl:
-          'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
+          'https://image.shutterstock.com/image-photo/yellow-silk-scarf-isolated-on-260nw-312765539.jpg',
     ),
     Product(
       id: 'p4',
@@ -42,7 +42,7 @@ class Products with ChangeNotifier {
     return [..._items];
   }
 
-List<Product> get favourites {
+  List<Product> get favourites {
     return _items.where((element) => element.isFavorite).toList();
   }
 
@@ -50,8 +50,26 @@ List<Product> get favourites {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  void addProduct() {
-    // add
+  void addProduct(Product product) {
+    if (product.id != null) {
+      final i =_items.indexWhere((element) => element.id == product.id);
+      _items[i] = product;
+    } else {
+      product = Product(
+        id: DateTime.now().toString(),
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+      );
+      _items.add(product);
+    }
+
+    notifyListeners();
+  }
+
+  void deleteProduct(String id){
+    _items.removeWhere((element) => element.id == id);
     notifyListeners();
   }
 }
